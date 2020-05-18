@@ -25,7 +25,7 @@ const StateIndicator = (props: { fetchState: FetchState }): JSX.Element => {
   switch (props.fetchState) {
     case FetchState.INITIALIZING:
       indicatorType = 'loading-indicator';
-      text = 'Vent litt, laster data ...';
+      text = 'Vent litt, henter data ...';
       break;
     case FetchState.FAILURE:
       indicatorType = 'failure-indicator';
