@@ -50,6 +50,7 @@ body {
 .row {
   display: flex;
   flex-direction: row;
+  flex: 1 0 auto;
 }
 
 .station-table__body .row {
