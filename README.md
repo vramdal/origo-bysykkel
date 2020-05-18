@@ -1,3 +1,32 @@
+Dette er Vidar Ramdal sin løsning på Oslo Origo sin kodeoppgave.
+
+Løsningen er implementert som en ren frontend-app, så man trenger en eller annen slags server for å kjøre den på sin egen maskin.
+
+Det enkleste er om man har enten `yarn` eller `npm` installert, da kan man installere `serve`, som er en enkel webserver. 
+
+a) hvis du bruker `yarn`:
+````
+  yarn global add serve
+````
+
+b) hvis du bruker `npm`:
+````
+  npm install -g serve
+````
+
+Etter å ha klonet dette repositoriet og navigert til rot-katalogen for repositoriet, kjører du
+
+````
+  serve -s build
+````
+
+Åpne en nettleser og naviger til http://localhost:5000, og du skal kunne se appen.
+
+Skulle det være problemer med denne framgangsmåten, så er appen også deployet til http://vvv.vidarramdal.com/origo-oppgave-1/ og kan sees der.
+
+
+-----
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -26,19 +55,3 @@ The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).

@@ -1,38 +1,102 @@
-.App {
-  text-align: center;
+html, body, table, #root {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  background-color: black;
+  color: yellow;
+  font-family: 'Squada One', cursive;
+  font-size: 14pt;
+  display: flex;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.station-table {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width: 100%;
+  height: 100%;
 }
 
-.App-link {
-  color: #61dafb;
+
+.disabled {
+  opacity: .3;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.station-table__header {
+  border-bottom: 2px solid yellow;
+  height: auto;
+  position: sticky;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 0.5em;
+  align-items: flex-end;
+  box-shadow: 0 5px 5px gray;
+  margin-bottom: 5px;
+}
+
+
+.station-table__body {
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  flex: auto;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.station-table__body .row {
+  padding-bottom: .2em;
+  padding-top: .2em;
+}
+
+.row > div {
+  align-content: flex-end;
+}
+
+.row > div:first-child {
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+  padding-left: 1em;
+}
+
+.row > div:nth-child(2), .row > div:nth-child(3) {
+  flex: 0 0 auto;
+  display: flex;
+  width: 60px;
+  justify-content: flex-end;
+}
+
+.row > div:last-child {
+  padding-right: 1em;
+}
+
+.row > div:first-child {
+  flex: auto;
+}
+
+.row:nth-child(even) {
+  background-color: #333333;
+}
+
+
+.state-indicator {
+  position: absolute;
+  margin: auto;
+  top: 50%;
+  text-align: center;
+  width: 100%;
+}
+
+.state-indicator.failure-indicator {
+  color: #ff0000;
 }
