@@ -1,28 +1,37 @@
 Dette er Vidar Ramdal sin løsning på Oslo Origo sin kodeoppgave.
 
-Løsningen er implementert som en ren frontend-app, så man trenger en eller annen slags server for å kjøre den på sin egen maskin.
+Løsningen er implementert som en ren frontend-app.
+# Den deployes ved push 
+til https://vramdal.github.io/origo-bysykkel/ og kan sees der.
 
-Det enkleste er om man har enten `yarn` eller `npm` installert, da kan man installere `serve`, som er en enkel webserver. 
+![website](https://github.com/vramdal/origo-bysykkel/workflows/website/badge.svg)
+
+------
+
+# Hvis du vil installere og kjøre den på egen maskin
+ trenger du `yarn` eller `npm` installert.
+
+Etter å ha klonet dette repositoriet og navigert til rot-katalogen for repositoriet, kjører du
 
 a) hvis du bruker `yarn`:
 ````
+  yarn install
   yarn global add serve
 ````
 
 b) hvis du bruker `npm`:
 ````
+  npm install
   npm install -g serve
 ````
 
-Etter å ha klonet dette repositoriet og navigert til rot-katalogen for repositoriet, kjører du
 
 ````
   serve -s build
 ````
 
-Åpne en nettleser og naviger til http://localhost:5000, og du skal kunne se appen.
 
-Skulle det være problemer med denne framgangsmåten, så er appen også deployet til http://vvv.vidarramdal.com/origo-oppgave-1/ og kan sees der.
+Åpne en nettleser og naviger til http://localhost:5000, og du skal kunne se appen.
 
 
 -----
