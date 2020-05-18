@@ -26,6 +26,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "build:dreamhost": "env-cmd -f .env.production.dreamhost react-scripts build",
+    "build:gitname": "env-cmd -f .env.gitname react-scripts build",
     "predeploy": "env-cmd -f .env.gitname react-scripts build",
     "deploy": "gh-pages -d build",
     "test": "react-scripts test",
