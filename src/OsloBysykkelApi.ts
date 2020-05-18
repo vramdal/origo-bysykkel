@@ -3,7 +3,7 @@ import { AutoDiscoveryFeedType } from './Types';
 export const apiFetch: (url: string) => Promise<Response> = async (url: string) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      return fetch(url, {
+      return fetch(url.replace('http://', 'https://'), {
         headers: new Headers({
           'Client-Identifier': 'vidarramdal-origo-oppgave',
         }),
