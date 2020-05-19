@@ -2,7 +2,7 @@ Dette er Vidar Ramdal sin løsning på Oslo Origo sin kodeoppgave.
 
 Løsningen er implementert som en ren frontend-app.
 
-Jeg har sjekka at den fungerer i Chrome, Safari og Firefox. Jeg har dessverre ikke noen maskin med IE eller Edge for øyeblikket.
+Jeg har sjekka at den fungerer i Chrome, Safari, Firefox og Edge. Jeg har dessverre ikke noen maskin med IE for øyeblikket.
 
 # Den deployes ved push 
 til https://vramdal.github.io/origo-bysykkel/ og kan sees der.
