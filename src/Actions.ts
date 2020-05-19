@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import {
   FETCH_AUTODISCOVERY,
   FETCH_FAILED,
@@ -11,17 +12,6 @@ import { Action } from 'redux';
 import { Seconds, StationInformationFeedType, StationStatusFeedType } from './Types';
 
 type FetchableFeed = StationStatusFeedType | StationInformationFeedType;
-
-function reschedule(actionName: typeof FETCH_STATION_INFORMATION | typeof FETCH_STATION_STATUS) {
-  return (dispatch: ThunkDispatch<SystemState, unknown, Action<string>>, getState: () => SystemState) => {
-    const nextFetch: Seconds = getState().ttl[actionName];
-    if (nextFetch < Infinity) {
-      setTimeout(() => {
-        dispatch(doFetchFeed(actionName));
-      }, nextFetch * 1000);
-    }
-  };
-}
 
 export const doFetchFeed = (
   actionName: typeof FETCH_STATION_INFORMATION | typeof FETCH_STATION_STATUS,
@@ -51,6 +41,17 @@ export const doFetchFeed = (
       dispatch(reschedule(actionName));
     });
 };
+
+function reschedule(actionName: typeof FETCH_STATION_INFORMATION | typeof FETCH_STATION_STATUS) {
+  return (dispatch: ThunkDispatch<SystemState, unknown, Action<string>>, getState: () => SystemState) => {
+    const nextFetch: Seconds = getState().ttl[actionName];
+    if (nextFetch < Infinity) {
+      setTimeout(() => {
+        dispatch(doFetchFeed(actionName));
+      }, nextFetch * 1000);
+    }
+  };
+}
 
 export const doInitialFetch = (): ThunkAction<void, SystemState, unknown, Action<string>> => (dispatch) => {
   return fetchJson(URL_AUTODISCOVERY)
