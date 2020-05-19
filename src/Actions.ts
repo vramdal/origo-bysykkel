@@ -6,11 +6,22 @@ import {
   SystemState,
 } from './Reducer';
 import { fetchJson, URL_AUTODISCOVERY } from './OsloBysykkelApi';
-import { ThunkAction } from 'redux-thunk';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import { Seconds, StationInformationFeedType, StationStatusFeedType } from './Types';
 
 type FetchableFeed = StationStatusFeedType | StationInformationFeedType;
+
+function reschedule(actionName: typeof FETCH_STATION_INFORMATION | typeof FETCH_STATION_STATUS) {
+  return (dispatch: ThunkDispatch<SystemState, unknown, Action<string>>, getState: () => SystemState) => {
+    const nextFetch: Seconds = getState().ttl[actionName];
+    if (nextFetch < Infinity) {
+      setTimeout(() => {
+        dispatch(doFetchFeed(actionName));
+      }, nextFetch * 1000);
+    }
+  };
+}
 
 export const doFetchFeed = (
   actionName: typeof FETCH_STATION_INFORMATION | typeof FETCH_STATION_STATUS,
@@ -29,6 +40,7 @@ export const doFetchFeed = (
         type: actionName,
         payload: body,
       });
+      dispatch(reschedule(actionName));
     })
     .catch((error: Error) => {
       console.error(`Error fetching ${fName} from ${url}`, error);
@@ -36,14 +48,7 @@ export const doFetchFeed = (
         type: FETCH_FAILED,
         actionName: actionName,
       });
-    })
-    .finally(() => {
-      const nextFetch: Seconds = getState().ttl[actionName];
-      if (nextFetch < Infinity) {
-        setTimeout(() => {
-          dispatch(doFetchFeed(actionName));
-        }, nextFetch * 1000);
-      }
+      dispatch(reschedule(actionName));
     });
 };
 
