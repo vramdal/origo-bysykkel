@@ -27,7 +27,8 @@ body {
 
 .station-table__header {
   border-bottom: 2px solid yellow;
-  height: auto;
+  height: 100px;
+  max-height: 100px;
   position: sticky;
   width: 100%;
   display: flex;
@@ -43,7 +44,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: scroll;
-  flex: auto;
+  flex: 1 1 auto;
   width: 100%;
 }
 
