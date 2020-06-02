@@ -1,11 +1,10 @@
-/* eslint-disable */
 import React from 'react';
-import {render, wait, waitForElementToBeRemoved} from '@testing-library/react';
-import {fetchJson} from './OsloBysykkelApi';
-import {resetAllWhenMocks, when} from 'jest-when';
-import {RootComponent} from './Root';
-import {act} from 'react-dom/test-utils';
-import {autoDiscoveryResponse, stationInformationResponse, stationStatus1, stationStatus2} from "./mock-data";
+import { render, wait, waitForElementToBeRemoved } from '@testing-library/react';
+import { fetchJson } from './OsloBysykkelApi';
+import { resetAllWhenMocks, when } from 'jest-when';
+import { RootComponent } from './Root';
+import { act } from 'react-dom/test-utils';
+import { autoDiscoveryResponse, stationInformationResponse, stationStatus1, stationStatus2 } from './mock-data';
 
 jest.mock('./OsloBysykkelApi', () => {
   const originalModule = jest.requireActual('./OsloBysykkelApi');
@@ -17,51 +16,33 @@ jest.mock('./OsloBysykkelApi', () => {
 
 const fetchJsonMock = fetchJson as jest.Mock;
 
-function response(json: { last_updated: number; data: any; ttl: number }): Promise<object> {
+function response(json: { last_updated: number; data: object; ttl: number }): Promise<object> {
   return Promise.resolve(json);
 }
 
-const childNodesToText = (tr: HTMLElement) =>
-    Array.from(tr.children)
-        .map((tr) => tr.textContent)
-        .join(' | ');
+const childNodesToText = (tr: HTMLElement): string =>
+  Array.from(tr.children)
+    .map((tr) => tr.textContent)
+    .join(' | ');
 
-describe('Happy case', () => {
+describe('Fetching and list rendering', () => {
   afterEach(() => {
     resetAllWhenMocks();
-    jest.useRealTimers();
-  })
+    jest.clearAllMocks();
+  });
   beforeEach(() => {
     jest.useFakeTimers();
     when(fetchJsonMock)
-        .calledWith(expect.stringContaining('gbfs.json'))
-        .mockResolvedValue(
-            response(autoDiscoveryResponse),
-        )
-        .calledWith(expect.stringContaining('station_information.json'))
-        .mockResolvedValue(
-            response(stationInformationResponse),
-        )
-        .calledWith(expect.stringContaining('station_status.json'))
-        .mockResolvedValueOnce(
-            response(stationStatus1),
-        )
-        .mockResolvedValueOnce(
-            response(stationStatus2),
-        )
-        .calledWith(expect.anything())
-        .mockImplementation(function (url) {
-          throw new Error('Ikke-mocket URL: ' + JSON.stringify(arguments));
-        });
+      .calledWith(expect.stringContaining('gbfs.json'))
+      .mockResolvedValue(response(autoDiscoveryResponse))
+      .calledWith(expect.stringContaining('station_information.json'))
+      .mockResolvedValue(response(stationInformationResponse));
   });
 
   test('it should render a list of stations', async () => {
-
     when(fetchJsonMock)
-        .calledWith(expect.stringContaining('station_status.json'))
-        .mockResolvedValue(
-            response(stationStatus1),
-        )
+      .calledWith(expect.stringContaining('station_status.json'))
+      .mockResolvedValueOnce(response(stationStatus1));
     const { getByTestId, container, getAllByRole } = render(<RootComponent />);
 
     expect(getByTestId('loading-indicator')).toBeInTheDocument();
@@ -71,25 +52,54 @@ describe('Happy case', () => {
     expect(childNodesToText(rows[1])).toMatchInlineSnapshot(`"Aker Brygge | 22 | 11"`);
     expect(childNodesToText(rows[2])).toMatchInlineSnapshot(`"Stortingstunellen | 19 | 5"`);
     expect(container).toMatchSnapshot();
-
   });
 
   test('it should update the list with new numbers', async () => {
     when(fetchJsonMock)
-        .calledWith(expect.stringContaining('station_status.json'))
-        .mockResolvedValueOnce(response(stationStatus1))
-        .mockResolvedValueOnce(response(stationStatus2))
+      .calledWith(expect.stringContaining('station_status.json'))
+      .mockResolvedValueOnce(response(stationStatus1))
+      .calledWith(expect.stringContaining('station_status.json'))
+      .mockResolvedValue(response(stationStatus2));
 
     const { getAllByRole, queryByTestId } = render(<RootComponent />);
     await wait(() => {
       expect(queryByTestId('loading-indicator')).toBeNull();
-    })
+    });
     await act(async () => {
       await jest.runAllTimers();
     });
 
-    const rows = getAllByRole('row');
-    expect(childNodesToText(rows[1])).toMatchInlineSnapshot(`"Aker Brygge | 33 | 0"`);
-    expect(childNodesToText(rows[2])).toMatchInlineSnapshot(`"Stortingstunellen | 0 | 24"`);
+    await wait(() => {
+      const rows = getAllByRole('row');
+      expect(childNodesToText(rows[1])).toMatchInlineSnapshot(`"Aker Brygge | 33 | 0"`);
+      expect(childNodesToText(rows[2])).toMatchInlineSnapshot(`"Stortingstunellen | 0 | 24"`);
+    });
+  });
+
+  test('it should display an error message when station status fetch fails, then try again', async () => {
+    when(fetchJsonMock)
+      .calledWith(expect.stringContaining('station_status.json'))
+      .mockRejectedValueOnce({ error: 'mock error' })
+      .mockResolvedValue(response(stationStatus1));
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementationOnce(() => {});
+
+    const { queryByTestId, getAllByRole } = render(<RootComponent />);
+    await wait(() => {
+      expect(queryByTestId('loading-indicator')).toBeNull();
+    });
+
+    await act(async () => {
+      await jest.runAllTimers();
+    });
+
+    await wait(() => {
+      const rows = getAllByRole('row');
+      expect(childNodesToText(rows[1])).toMatchInlineSnapshot(`"Aker Brygge | 22 | 11"`);
+      expect(childNodesToText(rows[2])).toMatchInlineSnapshot(`"Stortingstunellen | 19 | 5"`);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Error fetching stationStatus'), {
+        error: 'mock error',
+      });
+    });
   });
 });

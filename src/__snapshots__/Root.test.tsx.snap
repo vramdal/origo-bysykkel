@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Happy case it should render a list of stations 3`] = `
+exports[`Fetching and list rendering it should render a list of stations 3`] = `
 <div>
   <div
     class="state-indicator success-indicator"
