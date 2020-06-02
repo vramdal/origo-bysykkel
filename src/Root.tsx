@@ -7,10 +7,14 @@ import { reducer } from './Reducer';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 const middlewares = [thunk];
-const store = createStore(reducer, composeWithDevTools(applyMiddleware(...middlewares)));
+
+export const initializeStore = (): ReturnType<typeof createStore> => {
+  return createStore(reducer, composeWithDevTools(applyMiddleware(...middlewares)));
+};
+
 export const RootComponent = (): JSX.Element => (
   <React.StrictMode>
-    <Provider store={store}>
+    <Provider store={initializeStore()}>
       <App />
     </Provider>
   </React.StrictMode>

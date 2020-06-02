@@ -51,7 +51,7 @@ export interface StationInformationFeedType {
   last_updated: Seconds1970;
   ttl: Seconds;
   data: {
-    stations: [StationInfoType];
+    stations: Array<StationInfoType>;
   };
 }
 
@@ -69,7 +69,7 @@ export interface StationStatusFeedType {
   last_updated: Seconds1970;
   ttl: Seconds;
   data: {
-    stations: [StationStatusType];
+    stations: Array<StationStatusType>;
   };
 }
 
