@@ -62,7 +62,7 @@ export interface FetchErrorAction {
   actionName: typeof FETCH_STATION_STATUS | typeof FETCH_STATION_INFORMATION | typeof FETCH_AUTODISCOVERY;
 }
 
-const defaultState: SystemState = {
+export const defaultState: SystemState = {
   urls: {
     stationInfo: undefined,
     stationStatus: undefined,

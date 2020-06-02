@@ -15,7 +15,10 @@ type FetchableFeed = StationStatusFeedType | StationInformationFeedType;
 
 export const doFetchFeed = (
   actionName: typeof FETCH_STATION_INFORMATION | typeof FETCH_STATION_STATUS,
-): ThunkAction<void, SystemState, unknown, Action<string>> => (dispatch, getState) => {
+): ThunkAction<void, SystemState, unknown, Action<string>> => (
+  dispatch,
+  getState,
+): ReturnType<typeof fetchJson | typeof dispatch> => {
   const fName = actionName === FETCH_STATION_INFORMATION ? 'stationInfo' : 'stationStatus';
   const url = getState().urls[fName];
   if (!url) {
@@ -43,7 +46,7 @@ export const doFetchFeed = (
 };
 
 function reschedule(actionName: typeof FETCH_STATION_INFORMATION | typeof FETCH_STATION_STATUS) {
-  return (dispatch: ThunkDispatch<SystemState, unknown, Action<string>>, getState: () => SystemState) => {
+  return (dispatch: ThunkDispatch<SystemState, unknown, Action<string>>, getState: () => SystemState): void => {
     const nextFetch: Seconds = getState().ttl[actionName];
     if (nextFetch < Infinity) {
       setTimeout(() => {
@@ -53,7 +56,9 @@ function reschedule(actionName: typeof FETCH_STATION_INFORMATION | typeof FETCH_
   };
 }
 
-export const doInitialFetch = (): ThunkAction<void, SystemState, unknown, Action<string>> => (dispatch) => {
+export const doInitialFetch = (): ThunkAction<void, SystemState, unknown, Action<string>> => (
+  dispatch,
+): ReturnType<typeof fetchJson> => {
   return fetchJson(URL_AUTODISCOVERY)
     .then((r) => {
       dispatch({
@@ -71,3 +76,5 @@ export const doInitialFetch = (): ThunkAction<void, SystemState, unknown, Action
       });
     });
 };
+
+export const _testing = { reschedule };
