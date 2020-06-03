@@ -6,6 +6,11 @@ exports[`Fetching and list rendering it should render a list of stations 3`] = `
     class="state-indicator success-indicator"
     data-testid="success-indicator"
   />
+  <button
+    type="button"
+  >
+    Map
+  </button>
   <div
     class="station-table"
     role="table"

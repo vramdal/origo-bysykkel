@@ -5,18 +5,7 @@ import { connect, useDispatch } from 'react-redux';
 import { SystemState } from './Reducer';
 import { doInitialFetch } from './Actions';
 import { FetchState } from './Types';
-import { Cell, ColumnHeader, Row, RowGroup, Table } from './Layout';
-
-type DisplayStationStatus = {
-  stationId: string;
-  stationName: string;
-  numBikes?: number;
-  numLocks?: number;
-  isReturning: boolean;
-  isRenting: boolean;
-};
-
-type DisplayStationStatusList = Array<DisplayStationStatus>;
+import { DisplayStationStatusList, StationList } from './StationList';
 
 const StateIndicator = (props: { fetchState: FetchState }): JSX.Element => {
   let indicatorType;
@@ -43,17 +32,34 @@ const StateIndicator = (props: { fetchState: FetchState }): JSX.Element => {
   );
 };
 
-const StationRow = ({ station }: { station: DisplayStationStatus }): JSX.Element => (
-  <Row>
-    <Cell>{station.stationName}</Cell>
-    <Cell className={classnames({ disabled: !station.isReturning, exhausted: station.numLocks === 0 })}>
-      {station.numLocks}
-    </Cell>
-    <Cell className={classnames({ disabled: !station.isRenting, exhausted: station.numBikes === 0 })}>
-      {station.numBikes}
-    </Cell>
-  </Row>
-);
+function useSearchParam<T>(
+  searchParamName: string,
+  location: typeof window.location,
+  defaultValue: string,
+): [string, (newValue: string) => void] {
+  const urlSearchParams = new URLSearchParams(location.search);
+  const value = urlSearchParams.get(searchParamName) || defaultValue;
+  const setValue = (newValue: string): void => {
+    const url = new URL(window.location.href);
+    url.searchParams.set(searchParamName, newValue);
+    window.location.href = url.href;
+  };
+  return [value, setValue];
+}
+
+enum PAGES {
+  MAP = 'MAP',
+  LIST = 'LIST',
+}
+
+const SwitchPageButton = ({ page, switchPage }: { page: PAGES; switchPage: (page: PAGES) => void }): JSX.Element => {
+  const toPage = page === PAGES.LIST ? PAGES.MAP : PAGES.LIST;
+  return (
+    <button type={'button'} onClick={(): void => switchPage(toPage)}>
+      {page === PAGES.LIST ? 'Map' : 'List'}
+    </button>
+  );
+};
 
 const App = (props: AppProps): JSX.Element => {
   const dispatch = useDispatch();
@@ -62,26 +68,20 @@ const App = (props: AppProps): JSX.Element => {
     dispatch(doInitialFetch());
   }, [dispatch]);
 
+  const [pageName, setPageName] = useSearchParam('page', window.location, 'LIST');
+
+  const page = pageName as PAGES;
+
   return (
     <React.Fragment>
       <StateIndicator fetchState={props.fetchState} />
-      <Table className={classnames('station-table', { disabled: props.fetchState === FetchState.FAILURE })}>
-        <Row className={'station-table__header'}>
-          <ColumnHeader>Stasjon</ColumnHeader>
-          <ColumnHeader>Antall låser</ColumnHeader>
-          <ColumnHeader>Antall sykler</ColumnHeader>
-        </Row>
-        <RowGroup className={'station-table__body'}>
-          {props.stations?.map((station: DisplayStationStatus) => (
-            <StationRow key={station.stationId} station={station} />
-          ))}
-        </RowGroup>
-      </Table>
+      <SwitchPageButton page={page} switchPage={setPageName} />
+      <StationList stations={props.stations} fetchState={props.fetchState} />
     </React.Fragment>
   );
 };
 
-interface AppProps {
+export interface AppProps {
   fetchState: FetchState;
   stations?: DisplayStationStatusList;
 }
