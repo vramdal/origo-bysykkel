@@ -1,11 +1,15 @@
 import React from 'react';
 import { render, wait, waitForElementToBeRemoved } from '@testing-library/react';
-import { fetchJson } from './OsloBysykkelApi';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { RootComponent } from './Root';
 import { act } from 'react-dom/test-utils';
 import { autoDiscoveryResponse, stationInformationResponse, stationStatus1, stationStatus2 } from './mock-data';
 import { useSearchParam } from './searchParam';
+jest.mock('./searchParam');
+const useSearchParamMock = useSearchParam as jest.Mock;
+
+import { fetchJson } from './OsloBysykkelApi';
+const fetchJsonMock = fetchJson as jest.Mock;
 
 jest.mock('./OsloBysykkelApi', () => {
   const originalModule = jest.requireActual('./OsloBysykkelApi');
@@ -15,19 +19,23 @@ jest.mock('./OsloBysykkelApi', () => {
   };
 });
 
-jest.mock('./searchParam');
-
-const fetchJsonMock = fetchJson as jest.Mock;
-const useSearchParamMock = useSearchParam as jest.Mock;
+// import mapboxgl from 'mapbox-gl';
+jest.mock('mapbox-gl');
 
 function response(json: { last_updated: number; data: object; ttl: number }): Promise<object> {
   return Promise.resolve(json);
 }
 
-const childNodesToText = (tr: HTMLElement): string =>
-  Array.from(tr.children)
-    .map((tr) => tr.textContent)
+const childNodesToText = (parent: HTMLElement): string =>
+  Array.from(parent.children)
+    .map((child) => child.textContent)
     .join(' | ');
+
+const waitForDataLoad = async (queryByTestId: (text: string) => HTMLElement | null): Promise<void> => {
+  await wait(() => {
+    expect(queryByTestId('loading-indicator')).toBeNull();
+  });
+};
 
 describe('ui tests', () => {
   afterEach(() => {
@@ -74,9 +82,7 @@ describe('ui tests', () => {
         .mockResolvedValue(response(stationStatus2));
 
       const { getAllByRole, queryByTestId } = render(<RootComponent />);
-      await wait(() => {
-        expect(queryByTestId('loading-indicator')).toBeNull();
-      });
+      await waitForDataLoad(queryByTestId);
       await act(async () => {
         await jest.runAllTimers();
       });
@@ -97,9 +103,7 @@ describe('ui tests', () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementationOnce(() => {});
 
       const { queryByTestId, getAllByRole } = render(<RootComponent />);
-      await wait(() => {
-        expect(queryByTestId('loading-indicator')).toBeNull();
-      });
+      await waitForDataLoad(queryByTestId);
 
       await act(async () => {
         await jest.runAllTimers();
@@ -121,11 +125,50 @@ describe('ui tests', () => {
         .mockResolvedValueOnce(response(stationStatus1));
 
       const { container, queryByTestId } = await render(<RootComponent />);
-      await wait(() => {
-        expect(queryByTestId('loading-indicator')).toBeNull();
-      });
+      await waitForDataLoad(queryByTestId);
 
       expect(container).toMatchSnapshot();
+    });
+  });
+
+  describe('map view', () => {
+    beforeEach(() => {
+      when(useSearchParamMock)
+        .calledWith('tab', expect.anything(), expect.anything())
+        .mockReturnValue(['map', jest.fn()]);
+    });
+
+    it('should render markers for each station', async () => {
+      when(fetchJsonMock)
+        .calledWith(expect.stringContaining('station_status.json'))
+        .mockResolvedValueOnce(response(stationStatus1));
+
+      const { queryByTestId, getAllByRole } = render(<RootComponent />);
+      await waitForDataLoad(queryByTestId);
+
+      const rows = getAllByRole('tooltip');
+      expect(childNodesToText(rows[0])).toMatchInlineSnapshot(`" | 🚲 11 | 🔒 22"`);
+      expect(childNodesToText(rows[1])).toMatchInlineSnapshot(`" | 🚲 5 | 🔒 19"`);
+    });
+
+    it('should update markers with new numbers', async () => {
+      when(fetchJsonMock)
+        .calledWith(expect.stringContaining('station_status.json'))
+        .mockResolvedValueOnce(response(stationStatus1))
+        .calledWith(expect.stringContaining('station_status.json'))
+        .mockResolvedValue(response(stationStatus2));
+
+      const { getAllByRole, queryByTestId } = render(<RootComponent />);
+      await waitForDataLoad(queryByTestId);
+      await act(async () => {
+        await jest.runAllTimers();
+      });
+
+      await wait(() => {
+        const rows = getAllByRole('tooltip');
+        expect(childNodesToText(rows[0])).toMatchInlineSnapshot(`" | 🚲 0 | 🔒 33"`);
+        expect(childNodesToText(rows[1])).toMatchInlineSnapshot(`" | 🚲 24 | 🔒 0"`);
+      });
     });
   });
 });

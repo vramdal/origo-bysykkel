@@ -125,6 +125,7 @@ export class MapBoxMap extends React.Component<MapBoxMapProps, ComponentState> {
               'has-locks-available': station.numLocks && station.numLocks > 0,
             })}
             onClick={(): void => this.zoomToStation(station)}
+            role={'tooltip'}
           >
             <img src={logo} alt={'Oslo Bysykkel-logo'} className={'oslobysykkel-logo'} />
             {zoomCategory === ZoomCategory.DETAIL && (
@@ -135,8 +136,18 @@ export class MapBoxMap extends React.Component<MapBoxMapProps, ComponentState> {
             )}
             {(zoomCategory === ZoomCategory.DETAIL || zoomCategory === ZoomCategory.MEDIUM) && (
               <>
-                <div className={'bikes'}>🚲 {station.numBikes}</div>
-                <div className={'locks'}>🔒 {station.numLocks}</div>
+                <div className={'bikes'}>
+                  <span role={'img'} aria-label={'sykkel'}>
+                    🚲
+                  </span>{' '}
+                  {station.numBikes}
+                </div>
+                <div className={'locks'}>
+                  <span role={'img'} aria-label={'sykkel'}>
+                    🔒
+                  </span>{' '}
+                  {station.numLocks}
+                </div>
               </>
             )}
           </div>
@@ -144,7 +155,7 @@ export class MapBoxMap extends React.Component<MapBoxMapProps, ComponentState> {
       );
     });
     return (
-      <div ref={this.mapContainerRef} className="mapContainer">
+      <div ref={this.mapContainerRef} className="mapContainer" data-testid={'mapContainer'} role="application">
         {stationElements}
       </div>
     );

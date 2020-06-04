@@ -10,14 +10,14 @@ exports[`ui tests List rendering complete snapshot 1`] = `
     class="tab-bar"
   >
     <button
-      role="button"
+      role="tab"
       type="button"
     >
       Map
     </button>
     <button
       disabled=""
-      role="button"
+      role="tab"
       type="button"
     >
       List
@@ -113,14 +113,14 @@ exports[`ui tests List rendering it should render a list of stations 3`] = `
     class="tab-bar"
   >
     <button
-      role="button"
+      role="tab"
       type="button"
     >
       Map
     </button>
     <button
       disabled=""
-      role="button"
+      role="tab"
       type="button"
     >
       List
