@@ -12,6 +12,7 @@ export type DisplayStationStatus = {
   isRenting: boolean;
   lat: number;
   lon: number;
+  address: string;
 };
 
 export type DisplayStationStatusList = Array<DisplayStationStatus>;

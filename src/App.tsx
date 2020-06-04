@@ -91,6 +91,7 @@ const mapStateToProps = (state: SystemState): AppProps => {
         numLocks: stationStatus?.num_docks_available,
         lat: stationInfo.lat,
         lon: stationInfo.lon,
+        address: stationInfo.address,
       };
     }),
   };

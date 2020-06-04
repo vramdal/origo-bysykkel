@@ -127,11 +127,16 @@ export class MapBoxMap extends React.Component<MapBoxMapProps, ComponentState> {
             onClick={(): void => this.zoomToStation(station)}
           >
             <img src={logo} alt={'Oslo Bysykkel-logo'} className={'oslobysykkel-logo'} />
-            {zoomCategory === ZoomCategory.DETAIL && <h2>{station.stationName}</h2>}
+            {zoomCategory === ZoomCategory.DETAIL && (
+              <>
+                <h2>{station.stationName}</h2>
+                {station.stationName !== station.address && <p>{station.address}</p>}
+              </>
+            )}
             {(zoomCategory === ZoomCategory.DETAIL || zoomCategory === ZoomCategory.MEDIUM) && (
               <>
-                <div className={'bikes'}>{'🚲'.repeat(station.numBikes || 0)}</div>
-                <div className={'locks'}>{'🔒'.repeat(station.numLocks || 0)}</div>
+                <div className={'bikes'}>🚲 {station.numBikes}</div>
+                <div className={'locks'}>🔒 {station.numLocks}</div>
               </>
             )}
           </div>
