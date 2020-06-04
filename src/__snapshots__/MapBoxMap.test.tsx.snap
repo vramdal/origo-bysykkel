@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapBox integration should  1`] = `
+<div>
+  <div
+    class="mapContainer"
+    data-testid="mapContainer"
+    role="application"
+  >
+    <div
+      class="mapboxgl-marker mapboxgl-marker-anchor-center"
+    >
+      <div
+        class="station-marker zoom-MEDIUM has-bikes-available has-locks-available"
+        role="tooltip"
+      >
+        <img
+          alt="Oslo Bysykkel-logo"
+          class="oslobysykkel-logo"
+          src="oslobysykkel-logo.png"
+        />
+        <div
+          class="bikes"
+        >
+          <span
+            aria-label="sykkel"
+            role="img"
+          >
+            🚲
+          </span>
+           
+          8
+        </div>
+        <div
+          class="locks"
+        >
+          <span
+            aria-label="sykkel"
+            role="img"
+          >
+            🔒
+          </span>
+           
+          5
+        </div>
+      </div>
+    </div>
+    <div
+      class="mapboxgl-marker mapboxgl-marker-anchor-center"
+    >
+      <div
+        class="station-marker zoom-MEDIUM has-bikes-available has-locks-available"
+        role="tooltip"
+      >
+        <img
+          alt="Oslo Bysykkel-logo"
+          class="oslobysykkel-logo"
+          src="oslobysykkel-logo.png"
+        />
+        <div
+          class="bikes"
+        >
+          <span
+            aria-label="sykkel"
+            role="img"
+          >
+            🚲
+          </span>
+           
+          7
+        </div>
+        <div
+          class="locks"
+        >
+          <span
+            aria-label="sykkel"
+            role="img"
+          >
+            🔒
+          </span>
+           
+          11
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

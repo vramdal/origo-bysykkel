@@ -5,10 +5,12 @@ import { RootComponent } from './Root';
 import { act } from 'react-dom/test-utils';
 import { autoDiscoveryResponse, stationInformationResponse, stationStatus1, stationStatus2 } from './mock-data';
 import { useSearchParam } from './searchParam';
+import { fetchJson } from './OsloBysykkelApi';
+import { childNodesToText, response } from './test-utils';
+
 jest.mock('./searchParam');
 const useSearchParamMock = useSearchParam as jest.Mock;
 
-import { fetchJson } from './OsloBysykkelApi';
 const fetchJsonMock = fetchJson as jest.Mock;
 
 jest.mock('./OsloBysykkelApi', () => {
@@ -18,18 +20,22 @@ jest.mock('./OsloBysykkelApi', () => {
     fetchJson: jest.fn(),
   };
 });
-
-// import mapboxgl from 'mapbox-gl';
-jest.mock('mapbox-gl');
-
-function response(json: { last_updated: number; data: object; ttl: number }): Promise<object> {
-  return Promise.resolve(json);
-}
-
-const childNodesToText = (parent: HTMLElement): string =>
-  Array.from(parent.children)
-    .map((child) => child.textContent)
-    .join(' | ');
+jest.mock('mapbox-gl', () => {
+  const originalModule = jest.requireActual('mapbox-gl');
+  return {
+    ...originalModule,
+    Map: jest.fn().mockImplementation(() => {
+      return {
+        addControl: jest.fn(),
+        on: jest.fn(),
+        easeTo: jest.fn(),
+      };
+    }),
+    Marker: jest.fn().mockImplementation(() => {
+      return { setLngLat: jest.fn(), addTo: jest.fn() };
+    }),
+  };
+});
 
 const waitForDataLoad = async (queryByTestId: (text: string) => HTMLElement | null): Promise<void> => {
   await wait(() => {

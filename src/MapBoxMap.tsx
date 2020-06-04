@@ -39,6 +39,55 @@ const categorizeZoom = (zoom: number): ZoomCategory => {
   }
 };
 
+const StationMapMarker = ({
+  station,
+  refObject,
+  zoomCategory,
+  markerClickHandler,
+}: {
+  station: DisplayStationStatus;
+  refObject?: React.RefObject<HTMLDivElement>;
+  zoomCategory: ZoomCategory;
+  markerClickHandler: (station: DisplayStationStatus) => void;
+}): JSX.Element => {
+  return (
+    <div ref={refObject}>
+      <div
+        className={classNames('station-marker', `zoom-${zoomCategory}`, {
+          'has-bikes-available': station.numBikes && station.numBikes > 0,
+          'has-locks-available': station.numLocks && station.numLocks > 0,
+        })}
+        onClick={(): void => markerClickHandler(station)}
+        role={'tooltip'}
+      >
+        <img src={logo} alt={'Oslo Bysykkel-logo'} className={'oslobysykkel-logo'} />
+        {zoomCategory === ZoomCategory.DETAIL && (
+          <>
+            <h2>{station.stationName}</h2>
+            {station.stationName !== station.address && <address>{station.address}</address>}
+          </>
+        )}
+        {(zoomCategory === ZoomCategory.DETAIL || zoomCategory === ZoomCategory.MEDIUM) && (
+          <>
+            <div className={'bikes'}>
+              <span role={'img'} aria-label={'sykkel'}>
+                🚲
+              </span>{' '}
+              {station.numBikes}
+            </div>
+            <div className={'locks'}>
+              <span role={'img'} aria-label={'sykkel'}>
+                🔒
+              </span>{' '}
+              {station.numLocks}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export class MapBoxMap extends React.Component<MapBoxMapProps, ComponentState> {
   static defaultProps = {
     stations: [],
@@ -115,45 +164,16 @@ export class MapBoxMap extends React.Component<MapBoxMapProps, ComponentState> {
   }
 
   render(): JSX.Element {
-    const zoomCategory: string = categorizeZoom(this.state.zoom);
-    const stationElements = this.props.stations.map((station) => {
-      return (
-        <div key={station.stationId} ref={this.markerRefs.get(station.stationId)}>
-          <div
-            className={classNames('station-marker', `zoom-${zoomCategory}`, {
-              'has-bikes-available': station.numBikes && station.numBikes > 0,
-              'has-locks-available': station.numLocks && station.numLocks > 0,
-            })}
-            onClick={(): void => this.zoomToStation(station)}
-            role={'tooltip'}
-          >
-            <img src={logo} alt={'Oslo Bysykkel-logo'} className={'oslobysykkel-logo'} />
-            {zoomCategory === ZoomCategory.DETAIL && (
-              <>
-                <h2>{station.stationName}</h2>
-                {station.stationName !== station.address && <p>{station.address}</p>}
-              </>
-            )}
-            {(zoomCategory === ZoomCategory.DETAIL || zoomCategory === ZoomCategory.MEDIUM) && (
-              <>
-                <div className={'bikes'}>
-                  <span role={'img'} aria-label={'sykkel'}>
-                    🚲
-                  </span>{' '}
-                  {station.numBikes}
-                </div>
-                <div className={'locks'}>
-                  <span role={'img'} aria-label={'sykkel'}>
-                    🔒
-                  </span>{' '}
-                  {station.numLocks}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      );
-    });
+    const zoomCategory: ZoomCategory = categorizeZoom(this.state.zoom);
+    const stationElements = this.props.stations.map((station) => (
+      <StationMapMarker
+        station={station}
+        key={station.stationId}
+        refObject={this.markerRefs.get(station.stationId)}
+        zoomCategory={zoomCategory}
+        markerClickHandler={(station): void => this.zoomToStation(station)}
+      />
+    ));
     return (
       <div ref={this.mapContainerRef} className="mapContainer" data-testid={'mapContainer'} role="application">
         {stationElements}
@@ -161,3 +181,5 @@ export class MapBoxMap extends React.Component<MapBoxMapProps, ComponentState> {
     );
   }
 }
+
+export const _testing = { StationMapMarker, ZoomCategory };
