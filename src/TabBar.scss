@@ -1,0 +1,10 @@
+.tab-bar {
+  button:disabled {
+    background-color: ButtonFace;
+    color: ButtonText;
+  }
+  button:not(:disabled) {
+    background-color: ButtonHighlight;
+    color: ButtonText;
+  }
+}
