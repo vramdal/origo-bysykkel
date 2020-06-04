@@ -90,7 +90,7 @@ const StationMapMarker = ({
 };
 
 const Legend = (): JSX.Element => (
-  <dl className={'legend'} role={'list'}>
+  <div className={'legend'} role={'list'}>
     <div role={'listitem'}>
       <img src={logo} alt={'Oslo Bysykkel-logo'} className={'oslobysykkel-logo bike-and-lock-available'} />
       <span>Sykkel og lås ledig</span>
@@ -103,7 +103,7 @@ const Legend = (): JSX.Element => (
       <img src={logo} alt={'Oslo Bysykkel-logo'} className={'oslobysykkel-logo lock-no-bike-available'} />
       <span>Ingen sykkel ledig</span>
     </div>
-  </dl>
+  </div>
 );
 
 export class MapBoxMap extends React.Component<MapBoxMapProps, ComponentState> {

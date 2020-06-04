@@ -84,5 +84,42 @@ exports[`MapBox integration should  1`] = `
       </div>
     </div>
   </div>
+  <div
+    class="legend"
+    role="list"
+  >
+    <div
+      role="listitem"
+    >
+      <img
+        alt="Oslo Bysykkel-logo"
+        class="oslobysykkel-logo bike-and-lock-available"
+        src="oslobysykkel-logo.png"
+      />
+      <span>
+        Sykkel og lås ledig
+      </span>
+    </div>
+    <div>
+      <img
+        alt="Oslo Bysykkel-logo"
+        class="oslobysykkel-logo bike-no-lock-available"
+        src="oslobysykkel-logo.png"
+      />
+      <span>
+        Ingen lås ledig
+      </span>
+    </div>
+    <div>
+      <img
+        alt="Oslo Bysykkel-logo"
+        class="oslobysykkel-logo lock-no-bike-available"
+        src="oslobysykkel-logo.png"
+      />
+      <span>
+        Ingen sykkel ledig
+      </span>
+    </div>
+  </div>
 </div>
 `;
