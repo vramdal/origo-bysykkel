@@ -1,12 +1,7 @@
 .mapContainer {
-  /*position: absolute;*/
-  /*top: 0;*/
-  /*right: 0;*/
-  /*left: 0;*/
-  /*bottom: 0;*/
-  /*display: flex;*/
-  /*flex: 1 0 auto;*/
-  height: 100%;
+  display: flex;
+  flex: 1 0 auto;
+  overflow: hidden;
 
   .station-marker {
     background-color: ButtonFace;
@@ -29,6 +24,18 @@
 
     .oslobysykkel-logo {
       width: 25px;
+    }
+
+    &:not(.has-bikes-available) {
+      @extend .lock-no-bike-available
+    }
+
+    &:not(.has-locks-available) {
+      @extend .bike-no-lock-available
+    }
+
+    &:not(.has-locks-available):not(.has-bikes-available) {
+     @extend .no-bike-no-lock-available
     }
 
     h2 {
@@ -54,4 +61,36 @@
   }
 }
 
+.legend {
+  flex: 0 0 5px;
+  display: flex;
+  font-size: 10pt;
+  padding: 0.3em 1em;
+  justify-content: space-evenly;
 
+  > div {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+
+    > img {
+      margin-right: 5px;
+    }
+  }
+
+  img {
+    height: 15px;
+  }
+}
+
+.bike-no-lock-available {
+  filter: hue-rotate(180deg);
+}
+
+.lock-no-bike-available {
+  filter: hue-rotate(90deg);
+}
+
+.no-bike-no-lock-available {
+  filter: grayscale(100%);
+}

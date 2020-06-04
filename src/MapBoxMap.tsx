@@ -64,6 +64,7 @@ const StationMapMarker = ({
         {zoomCategory === ZoomCategory.DETAIL && (
           <>
             <h2>{station.stationName}</h2>
+            <p>ID: {station.stationId}</p>
             {station.stationName !== station.address && <address>{station.address}</address>}
           </>
         )}
@@ -87,6 +88,23 @@ const StationMapMarker = ({
     </div>
   );
 };
+
+const Legend = (): JSX.Element => (
+  <dl className={'legend'} role={'list'}>
+    <div role={'listitem'}>
+      <img src={logo} alt={'Oslo Bysykkel-logo'} className={'oslobysykkel-logo bike-and-lock-available'} />
+      <span>Sykkel og lås ledig</span>
+    </div>
+    <div>
+      <img src={logo} alt={'Oslo Bysykkel-logo'} className={'oslobysykkel-logo bike-no-lock-available'} />
+      <span>Ingen lås ledig</span>
+    </div>
+    <div>
+      <img src={logo} alt={'Oslo Bysykkel-logo'} className={'oslobysykkel-logo lock-no-bike-available'} />
+      <span>Ingen sykkel ledig</span>
+    </div>
+  </dl>
+);
 
 export class MapBoxMap extends React.Component<MapBoxMapProps, ComponentState> {
   static defaultProps = {
@@ -175,9 +193,12 @@ export class MapBoxMap extends React.Component<MapBoxMapProps, ComponentState> {
       />
     ));
     return (
-      <div ref={this.mapContainerRef} className="mapContainer" data-testid={'mapContainer'} role="application">
-        {stationElements}
-      </div>
+      <>
+        <div ref={this.mapContainerRef} className="mapContainer" data-testid={'mapContainer'} role="application">
+          {stationElements}
+        </div>
+        <Legend />
+      </>
     );
   }
 }
