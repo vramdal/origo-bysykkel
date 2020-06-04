@@ -1,0 +1,57 @@
+.mapContainer {
+  /*position: absolute;*/
+  /*top: 0;*/
+  /*right: 0;*/
+  /*left: 0;*/
+  /*bottom: 0;*/
+  /*display: flex;*/
+  /*flex: 1 0 auto;*/
+  height: 100%;
+
+  .station-marker {
+    background-color: ButtonFace;
+    padding: 1em;
+    border-radius: 5px;
+    color: black;
+    max-width: 5em;
+    transition: max-width .1s, background-color .2s;
+
+    &.zoom-WORLD {
+      background-color: transparent;
+      max-width: 25px;
+    }
+
+    div {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .oslobysykkel-logo {
+      width: 25px;
+    }
+
+    h2 {
+      font-size: 10pt;
+      white-space: pre;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &.zoom-DETAIL {
+      max-width: 10em;
+
+      h2 {
+        white-space: normal;
+        overflow: visible;
+
+      }
+    }
+
+    .bikes, .locks {
+      font-size: 14pt;
+    }
+  }
+}
+
+

@@ -6,6 +6,9 @@ import { SystemState } from './Reducer';
 import { doInitialFetch } from './Actions';
 import { FetchState } from './Types';
 import { DisplayStationStatusList, StationList } from './StationList';
+import { MapBoxMap } from './MapBoxMap';
+import { TabBar, Tabs } from './TabBar';
+import { useSearchParam } from './searchParam';
 
 const StateIndicator = (props: { fetchState: FetchState }): JSX.Element => {
   let indicatorType;
@@ -32,33 +35,20 @@ const StateIndicator = (props: { fetchState: FetchState }): JSX.Element => {
   );
 };
 
-function useSearchParam<T>(
-  searchParamName: string,
-  location: typeof window.location,
-  defaultValue: string,
-): [string, (newValue: string) => void] {
-  const urlSearchParams = new URLSearchParams(location.search);
-  const value = urlSearchParams.get(searchParamName) || defaultValue;
-  const setValue = (newValue: string): void => {
-    const url = new URL(window.location.href);
-    url.searchParams.set(searchParamName, newValue);
-    window.location.href = url.href;
-  };
-  return [value, setValue];
-}
+const tabs: Tabs = new Map([
+  ['map', 'Map'],
+  ['list', 'List'],
+]);
 
-enum PAGES {
-  MAP = 'MAP',
-  LIST = 'LIST',
-}
-
-const SwitchPageButton = ({ page, switchPage }: { page: PAGES; switchPage: (page: PAGES) => void }): JSX.Element => {
-  const toPage = page === PAGES.LIST ? PAGES.MAP : PAGES.LIST;
-  return (
-    <button type={'button'} onClick={(): void => switchPage(toPage)}>
-      {page === PAGES.LIST ? 'Map' : 'List'}
-    </button>
-  );
+const TabContent = (props: AppProps & { tabId: string; stations: DisplayStationStatusList }): JSX.Element => {
+  switch (props.tabId) {
+    case 'map':
+      return <MapBoxMap stations={props.stations} fetchState={props.fetchState} />;
+    case 'list':
+      return <StationList stations={props.stations} fetchState={props.fetchState} />;
+    default:
+      throw new Error('Invalid tab id: ' + props.tabId);
+  }
 };
 
 const App = (props: AppProps): JSX.Element => {
@@ -68,15 +58,14 @@ const App = (props: AppProps): JSX.Element => {
     dispatch(doInitialFetch());
   }, [dispatch]);
 
-  const [pageName, setPageName] = useSearchParam('page', window.location, 'LIST');
-
-  const page = pageName as PAGES;
+  const [tabId, gotoTab] = useSearchParam('tab', window.location, 'map');
 
   return (
     <React.Fragment>
       <StateIndicator fetchState={props.fetchState} />
-      <SwitchPageButton page={page} switchPage={setPageName} />
-      <StationList stations={props.stations} fetchState={props.fetchState} />
+      <TabBar tabs={tabs} activeId={tabId} switchTab={gotoTab} />
+
+      {props.stations && <TabContent fetchState={props.fetchState} tabId={tabId} stations={props.stations} />}
     </React.Fragment>
   );
 };
@@ -100,6 +89,8 @@ const mapStateToProps = (state: SystemState): AppProps => {
         isReturning: stationStatus?.is_returning === 1 || false,
         numBikes: stationStatus?.num_bikes_available,
         numLocks: stationStatus?.num_docks_available,
+        lat: stationInfo.lat,
+        lon: stationInfo.lon,
       };
     }),
   };

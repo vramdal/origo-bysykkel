@@ -2,15 +2,16 @@ import { Cell, ColumnHeader, Row, RowGroup, Table } from './Layout';
 import classnames from 'classnames';
 import { FetchState } from './Types';
 import React from 'react';
-import { AppProps } from './App';
 
-type DisplayStationStatus = {
+export type DisplayStationStatus = {
   stationId: string;
   stationName: string;
   numBikes?: number;
   numLocks?: number;
   isReturning: boolean;
   isRenting: boolean;
+  lat: number;
+  lon: number;
 };
 
 export type DisplayStationStatusList = Array<DisplayStationStatus>;
@@ -26,7 +27,12 @@ const StationRow = ({ station }: { station: DisplayStationStatus }): JSX.Element
   </Row>
 );
 
-export const StationList = (props: AppProps): JSX.Element => (
+interface StationListProps {
+  stations: DisplayStationStatusList;
+  fetchState: FetchState;
+}
+
+export const StationList = (props: StationListProps): JSX.Element => (
   <Table className={classnames('station-table', { disabled: props.fetchState === FetchState.FAILURE })}>
     <Row className={'station-table__header'}>
       <ColumnHeader>Stasjon</ColumnHeader>

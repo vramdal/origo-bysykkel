@@ -1,16 +1,131 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Fetching and list rendering it should render a list of stations 3`] = `
+exports[`ui tests List rendering complete snapshot 1`] = `
 <div>
   <div
     class="state-indicator success-indicator"
     data-testid="success-indicator"
   />
-  <button
-    type="button"
+  <div
+    class="tab-bar"
   >
-    Map
-  </button>
+    <button
+      role="button"
+      type="button"
+    >
+      Map
+    </button>
+    <button
+      disabled=""
+      role="button"
+      type="button"
+    >
+      List
+    </button>
+  </div>
+  <div
+    class="station-table"
+    role="table"
+  >
+    <div
+      class="row station-table__header"
+      role="row"
+    >
+      <div
+        class=""
+        role="columnheader"
+      >
+        Stasjon
+      </div>
+      <div
+        class=""
+        role="columnheader"
+      >
+        Antall låser
+      </div>
+      <div
+        class=""
+        role="columnheader"
+      >
+        Antall sykler
+      </div>
+    </div>
+    <div
+      class="station-table__body"
+      role="rowgroup"
+    >
+      <div
+        class="row"
+        role="row"
+      >
+        <div
+          role="cell"
+        >
+          Aker Brygge
+        </div>
+        <div
+          class=""
+          role="cell"
+        >
+          22
+        </div>
+        <div
+          class=""
+          role="cell"
+        >
+          11
+        </div>
+      </div>
+      <div
+        class="row"
+        role="row"
+      >
+        <div
+          role="cell"
+        >
+          Stortingstunellen
+        </div>
+        <div
+          class=""
+          role="cell"
+        >
+          19
+        </div>
+        <div
+          class=""
+          role="cell"
+        >
+          5
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ui tests List rendering it should render a list of stations 3`] = `
+<div>
+  <div
+    class="state-indicator success-indicator"
+    data-testid="success-indicator"
+  />
+  <div
+    class="tab-bar"
+  >
+    <button
+      role="button"
+      type="button"
+    >
+      Map
+    </button>
+    <button
+      disabled=""
+      role="button"
+      type="button"
+    >
+      List
+    </button>
+  </div>
   <div
     class="station-table"
     role="table"

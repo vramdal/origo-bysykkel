@@ -15,6 +15,8 @@
     "@types/react-redux": "^7.1.8",
     "classnames": "^2.2.6",
     "env-cmd": "^10.1.0",
+    "mapbox-gl": "^1.10.1",
+    "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
@@ -51,6 +53,7 @@
   },
   "devDependencies": {
     "@types/jest-when": "^2.7.1",
+    "@types/mapbox-gl": "^1.10.2",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "eslint-config-prettier": "^6.11.0",
