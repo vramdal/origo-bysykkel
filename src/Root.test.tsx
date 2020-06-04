@@ -100,6 +100,26 @@ describe('ui tests', () => {
       });
     });
 
+    test('it should not update the list if data is stale', async () => {
+      when(fetchJsonMock)
+        .calledWith(expect.stringContaining('station_status.json'))
+        .mockResolvedValueOnce(response(stationStatus1, 2))
+        .calledWith(expect.stringContaining('station_status.json'))
+        .mockResolvedValue(response(stationStatus2, 2));
+
+      const { getAllByRole, queryByTestId } = render(<RootComponent />);
+      await waitForDataLoad(queryByTestId);
+      await act(async () => {
+        await jest.runAllTimers();
+      });
+
+      await wait(() => {
+        const rows = getAllByRole('row');
+        expect(childNodesToText(rows[1])).toMatchInlineSnapshot(`"Aker Brygge | 22 | 11"`);
+        expect(childNodesToText(rows[2])).toMatchInlineSnapshot(`"Stortingstunellen | 19 | 5"`);
+      });
+    });
+
     test('it should display an error message when station status fetch fails, then try again', async () => {
       when(fetchJsonMock)
         .calledWith(expect.stringContaining('station_status.json'))
