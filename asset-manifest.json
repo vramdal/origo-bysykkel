@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "https://vramdal.github.io/origo-bysykkel/static/css/main.c8c53c4d.chunk.css",
+    "main.js": "https://vramdal.github.io/origo-bysykkel/static/js/main.3f1b18c6.chunk.js",
+    "main.js.map": "https://vramdal.github.io/origo-bysykkel/static/js/main.3f1b18c6.chunk.js.map",
+    "runtime-main.js": "https://vramdal.github.io/origo-bysykkel/static/js/runtime-main.b2e5717d.js",
+    "runtime-main.js.map": "https://vramdal.github.io/origo-bysykkel/static/js/runtime-main.b2e5717d.js.map",
+    "static/js/2.9fb7b01d.chunk.js": "https://vramdal.github.io/origo-bysykkel/static/js/2.9fb7b01d.chunk.js",
+    "static/js/2.9fb7b01d.chunk.js.map": "https://vramdal.github.io/origo-bysykkel/static/js/2.9fb7b01d.chunk.js.map",
+    "index.html": "https://vramdal.github.io/origo-bysykkel/index.html",
+    "precache-manifest.7533a02418b66b73fffa687f520ac4ed.js": "https://vramdal.github.io/origo-bysykkel/precache-manifest.7533a02418b66b73fffa687f520ac4ed.js",
+    "service-worker.js": "https://vramdal.github.io/origo-bysykkel/service-worker.js",
+    "static/css/main.c8c53c4d.chunk.css.map": "https://vramdal.github.io/origo-bysykkel/static/css/main.c8c53c4d.chunk.css.map",
+    "static/js/2.9fb7b01d.chunk.js.LICENSE.txt": "https://vramdal.github.io/origo-bysykkel/static/js/2.9fb7b01d.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b2e5717d.js",
+    "static/js/2.9fb7b01d.chunk.js",
+    "static/css/main.c8c53c4d.chunk.css",
+    "static/js/main.3f1b18c6.chunk.js"
+  ]
+}
